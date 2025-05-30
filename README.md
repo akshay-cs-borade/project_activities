@@ -43,6 +43,14 @@ The app uses an `Activity` model to track:
 
 This allows the conversation feed to serve as a complete **audit trail** and team communication log — all in one place.
 
+![ProjectHistory-05-30-2025_09_16_AM](https://github.com/user-attachments/assets/7ebbe799-74b8-49fe-92d4-1ffcb05b8b81)
+
+![ProjectHistory-05-30-2025_09_01_AM](https://github.com/user-attachments/assets/49b3ad11-6abe-425a-afea-7a3e7adf5fa5)
+
+![ProjectHistory-05-30-2025_09_01_AM (1)](https://github.com/user-attachments/assets/b86fec81-fdb1-4e43-80da-874e94868c2a)
+
+
+
 ---
 
 ## 🛠️ Technologies Used
