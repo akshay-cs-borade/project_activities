@@ -5,6 +5,13 @@ class CommentsController < ApplicationController
     @comment = @project.comments.new(comment_params.merge(user: current_user))
 
     if @comment.save
+      Activity.create!(
+        project: @project,
+        user: current_user,
+        activity_type: "comment",
+        message: @comment.content
+      )
+
       notify_users(@project, "#{current_user.name} commented: #{@comment.content}")
       render json: @comment, status: :created
     else

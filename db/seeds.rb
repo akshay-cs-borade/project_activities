@@ -1,13 +1,5 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
 # Clear existing records
+Activity.destroy_all
 Comment.destroy_all
 Project.destroy_all
 User.destroy_all
@@ -35,13 +27,38 @@ projects = [
   Project.create!(name: "Project Gamma", status: "Completed", manager: managers[0], developer: developers[2])
 ]
 
-# Create Comments for Projects
-comments = [
-  Comment.create!(content: "This project is in the initial phase.", user: managers[0], project: projects[0]),
-  Comment.create!(content: "We need to add more features.", user: developers[0], project: projects[0]),
-  Comment.create!(content: "Testing phase started!", user: managers[1], project: projects[1]),
-  Comment.create!(content: "Bug fixing in progress.", user: developers[1], project: projects[1]),
-  Comment.create!(content: "Project completed successfully!", user: developers[2], project: projects[2])
+# Add status change activities
+projects.each do |project|
+  Activity.create!(
+    project: project,
+    user: project.manager,
+    activity_type: "status_change",
+    message: "Project created with status '#{project.status}'"
+  )
+end
+
+# Create Comments and Associated Activities
+comments_data = [
+  { user: managers[0], project: projects[0], content: "This project is in the initial phase." },
+  { user: developers[0], project: projects[0], content: "We need to add more features." },
+  { user: managers[1], project: projects[1], content: "Testing phase started!" },
+  { user: developers[1], project: projects[1], content: "Bug fixing in progress." },
+  { user: developers[2], project: projects[2], content: "Project completed successfully!" }
 ]
 
-puts "✅ Seeded #{User.count} users, #{Project.count} projects, and #{Comment.count} comments successfully!"
+comments_data.each do |data|
+  comment = Comment.create!(
+    content: data[:content],
+    user: data[:user],
+    project: data[:project]
+  )
+
+  Activity.create!(
+    project: data[:project],
+    user: data[:user],
+    activity_type: "comment",
+    message: comment.content
+  )
+end
+
+puts "✅ Seeded #{User.count} users, #{Project.count} projects, #{Comment.count} comments, and #{Activity.count} activities!"

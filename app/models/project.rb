@@ -3,6 +3,7 @@ class Project < ApplicationRecord
     has_many :histories, dependent: :destroy
     belongs_to :manager, class_name: "User", optional: true
     belongs_to :developer, class_name: "User", optional: true
+    has_many :activities, dependent: :destroy
 
     STATUSES = ["Pending", "In Progress", "Completed"].freeze
 

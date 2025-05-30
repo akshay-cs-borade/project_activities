@@ -8,6 +8,7 @@ class User < ApplicationRecord
   has_many :histories
   has_many :assigned_projects, class_name: "Project", foreign_key: "manager_id"
   has_many :developer_projects, class_name: "Project", foreign_key: "developer_id"
+  has_many :activities, dependent: :nullify
 
   enum role: { developer: 0, manager: 1, admin: 2 }
   

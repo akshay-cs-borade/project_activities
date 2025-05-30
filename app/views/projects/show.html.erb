@@ -3,9 +3,9 @@
 
 <% if current_user.can_change_status? %>
   <h2>Change Status</h2>
-  <%= form_with url: project_path(@project), method: :patch do %>
-    <%= select_tag :status, options_for_select(Project::STATUSES, @project.status), class: "form-control mb-2" %>
-    <%= submit_tag "Update Status", class: "btn btn-success" %>
+  <%= form_with(model: @project, method: :patch) do |f| %>
+    <%= f.select :status, options_for_select(Project::STATUSES, @project.status), class: "form-control mb-2" %>
+    <%= f.submit "Update Status", class: "btn btn-success" %>
   <% end %>
 <% end %>
 
@@ -15,10 +15,21 @@
   <%= f.submit "Add Comment", class: "btn btn-primary" %>
 <% end %>
 
-<ul class="list-group mt-3">
-  <% @comments.each do |comment| %>
+<br/>
+<div>
+<h2>Project Conversation</h2>
+<ul class="list-group" id="conversation-feed">
+  <% @project.activities.order(created_at: :asc).each do |activity| %>
     <li class="list-group-item">
-      <strong><%= "#{comment.user.name} (#{comment.user.email})" %>:</strong> <%= comment.content %>
+      <strong><%= activity.user.name %></strong>
+      <% if activity.activity_type == "comment" %>
+        <span>commented:</span>
+        <p><%= activity.message %></p>
+      <% elsif activity.activity_type == "status_change" %>
+        <span><%= activity.message %></span>
+      <% end %>
+      <small class="text-muted float-end"><%= activity.created_at.strftime("%d %b %Y, %I:%M %p") %></small>
     </li>
   <% end %>
 </ul>
+</div>

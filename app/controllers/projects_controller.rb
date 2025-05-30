@@ -40,7 +40,16 @@ class ProjectsController < ApplicationController
 
   def update
     if current_user.admin? || (current_user.manager?) || (current_user.developer? && @project.developer_id.eql?(current_user.id) )
+      old_status = @project.status
+      new_status = project_params[:status]
+
       if @project.update(project_params)
+        Activity.create!(
+          project: @project,
+          user: current_user,
+          activity_type: "status_change",
+          message: "changed status from #{old_status} to #{new_status}"
+        )
         redirect_to @project, notice: "Project updated successfully."
       else
         render :edit
